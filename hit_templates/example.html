@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Write sentences to describe images</title>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+    <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js'></script>    
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Instructions</h1>
+    </div>
+    <div class='container-fluid'></div>
+
+    <!-- This part needs to be in every template -->
+    <script type='text/json' id='input'>
+      {{ input }}
+    </script>
+    <form id='results-form' method='post' action='dummy' class='text-center'>
+      <input type='hidden' value='' name='assignmentId' id='assignmentId'/>
+      <input type='hidden' value='' name='output' id='output'/>
+      <input type='submit' class='btn btn-lg btn-success' id='submit-btn' value='Submit' disabled/>          
+    </form>
+    <!-- End of part that needs to be copied verbatim -->
+
+  </body>
+</html>

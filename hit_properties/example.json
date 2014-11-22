@@ -1,0 +1,12 @@
+{
+  "title": "Write sentences to describe images",
+  "description": "Write sentences to describe what you see in images.",
+  "keywords": "image,images,write,writing,sentence",
+  "reward": 0.05,
+  "duration": 900,
+  "frame_height": 20000,
+  "max_assignments": 3,
+  "country": "US",
+  "hits_approved": 100,
+  "percent_approved": 95
+}
