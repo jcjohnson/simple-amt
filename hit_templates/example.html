@@ -7,12 +7,46 @@
     <script src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js'></script>
     <script src='//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js'></script>    
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      #text-area {
+        margin: 10px 0;
+        font-size: 24pt;
+      }
+      #button-div {
+        margin-bottom: 10px;
+      }
+      #counter {
+        margin: 0 10px;
+        font-size: 20pt;
+        font-weight: bold;
+      }
+      img {
+        height: 600px;
+      }
+    </style>
   </head>
   <body>
-    <div class='container'>
+    <div class='container-fluid'>
       <h1>Instructions</h1>
+      <div class='row'>
+        <div class='col-xs-12 text-center'>
+          <div id='image-container'>
+          </div>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-xs-4 col-xs-offset-4'>
+          <textarea id='text-area' class='form-control tb-margin' disabled></textarea>
+        </div>
+        <div class='col-xs-4 col-xs-offset-4 text-center' id='button-div'>
+          <button id='prev-btn' class='btn btn-lg btn-primary' disabled>Back</button>
+          <span id='counter'>
+            <span class='counter-top'></span> / <span class='counter-bottom'></span>
+          </span>
+          <button id='next-btn' class='btn btn-lg btn-primary' disabled>Next</button>
+        </div>
+      </div>
     </div>
-    <div class='container-fluid'></div>
 
     <!-- This part needs to be in every template -->
     <script type='text/json' id='input'>
@@ -23,7 +57,155 @@
       <input type='hidden' value='' name='output' id='output'/>
       <input type='submit' class='btn btn-lg btn-success' id='submit-btn' value='Submit' disabled/>          
     </form>
+    <script>
+      var simpleamt = (function() {
+        
+        // Copied from http://james.padolsey.com/javascript/bujs-1-getparameterbyname/
+        function getUrlParam(name) {
+          var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+          return match ? decodeURIComponent(match[1].replace(/\+/g, ' ')) : null;
+        }
+
+        function getInput() {
+          try {
+            return JSON.parse($('#input').html());
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function setOutput(output) {
+          $('#output').val(JSON.stringify(output));
+        }
+
+        function isPreview() {
+          var assignment_id = getUrlParam('assignmentId');
+          if (assignment_id === null) return false;
+          return assignment_id == 'ASSIGNMENT_ID_NOT_AVAILABLE';
+        }
+
+        function setupSubmit() {
+          var submit_to = getUrlParam('turkSubmitTo');
+          $('#results-form').attr('action', submit_to + '/mturk/externalSubmit');                      
+          $('#assignmentId').val(getUrlParam('assignmentId'));
+        }
+
+        return {
+          getInput: getInput,
+          setOutput: setOutput,
+          isPreview: isPreview,
+          setupSubmit: setupSubmit,
+        }
+
+      })();
+    </script>
     <!-- End of part that needs to be copied verbatim -->
 
+    <script>
+      $(function() {
+
+        // Define some default input.
+        var input = [
+          'http://samsuria.com/wp-content/uploads/2014/10/cute-cat-wallpapers.jpg',
+          'http://stuffpoint.com/cats/image/41633-cats-cute-cat.jpg',
+        ];
+
+        // Descriptions of images, parallel to input.
+        var descriptions = [];
+
+        // Some variables to track state of the HIT.
+        var idx = 0;
+        var enabled = false;
+
+        function main() {
+          // If this is a HIT on AMT, then replace the default input with the real input.
+          var hit_input = simpleamt.getInput();
+          if (hit_input !== null) {
+            input = hit_input
+          }
+
+          // Enable the UI if the HIT is not in preview mode.
+          if (!simpleamt.isPreview()) {
+            enable_hit();
+          }
+
+          // Set up the descriptions.
+          _.each(input, function() { descriptions.push(''); });
+
+          // Preload all images
+          var imgs = [];
+          _.each(input, function(img_url) {
+            var img = new Image();
+            img.onload = function() { console.log('loaded image from ' + img_url); };
+            img.src = img_url;
+          });
+
+          render();
+        }
+
+        // Use the current index to update the image and description
+        function render() {
+          // Set up the image
+          $('#image-container').empty();
+          $('<img>').attr('src', input[idx]).appendTo($('#image-container'));
+
+          // Set up the text area
+          $('#text-area').val(descriptions[idx]);
+
+          // Refresh the counter
+          $('.counter-top').text(idx + 1);
+          $('.counter-bottom').text(input.length);
+
+          // If the UI is enabled, enable or disable the buttons depending on
+          // the index.
+          if (enabled) {
+            var prev_btn = $('#prev-btn');
+            var next_btn = $('#next-btn');
+            prev_btn.prop('disabled', true);
+            next_btn.prop('disabled', true);
+            if (idx > 0) {
+              prev_btn.prop('disabled', false);
+            }
+            if (idx < input.length - 1) next_btn.prop('disabled', false);
+          }
+        }
+
+        // Update the index, and save the text in the text area.
+        function set_idx(new_idx) {
+          if (new_idx < 0 || new_idx >= input.length) return;
+          descriptions[idx] = $('#text-area').val();
+
+          idx = new_idx;
+          render();
+        }
+
+        // Enable the UI.
+        function enable_hit() {
+          enabled = true;
+
+          // Enable components
+          $('#next-btn').click(function() { set_idx(idx + 1) });
+          $('#prev-btn').click(function() { set_idx(idx - 1) });
+          $('#text-area').prop('disabled', false);
+          $('#submit-btn').prop('disabled', false);
+
+          // Set up submit handler.
+          simpleamt.setupSubmit();
+          $('#submit-btn').click(function() {
+            descriptions[idx] = $('#text-area').val();
+            if (_.any(descriptions, function(d) { return d.length < 5; })) {
+              alert('Descriptions not long enough. Correct before submitting.');
+              return false;
+            }
+            var output = _.map(_.zip(input, descriptions), function(x) {
+              return {'image_url': x[0], 'description': x[1]};
+            });
+            simpleamt.setOutput(output);
+          });
+        }
+
+        main();
+      });
+    </script>
   </body>
 </html>
