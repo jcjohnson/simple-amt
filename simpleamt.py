@@ -10,11 +10,16 @@ A bunch of free functions that we use in all scripts.
 """
 
 
-def get_jinja_env(config=None):
+def get_jinja_env(config):
   """
   Get a jinja2 Environment object that we can use to find templates.
   """
   return Environment(loader=FileSystemLoader(config['template-directories']))
+
+
+def json_file(filename):
+  with open(filename, 'r') as f:
+    return json.load(f)
 
 
 def get_parent_parser():
@@ -26,8 +31,8 @@ def get_parent_parser():
                       default=True,
                       help="Whether to run on the production AMT site.")
   parser.add_argument('--hit_ids_file')
-  parser.add_argument('--config_file', default='config.json',
-                      type=argparse.FileType('r'))
+  parser.add_argument('--config', default='config.json',
+                      type=json_file)
   return parser
 
 
@@ -35,9 +40,8 @@ def get_mturk_connection_from_args(args):
   """
   Utility method to get an MTurkConnection from argparse args.
   """
-  config = json.load(args.config_file)
-  aws_access_key = config.get('aws_access_key')
-  aws_secret_key = config.get('aws_secret_key')
+  aws_access_key = args.config.get('aws_access_key')
+  aws_secret_key = args.config.get('aws_secret_key')
   return get_mturk_connection(sandbox=args.sandbox,
                               aws_access_key=aws_access_key,
                               aws_secret_key=aws_secret_key)

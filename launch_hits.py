@@ -1,11 +1,12 @@
 import argparse, json
 
 from boto.mturk.price import Price
+from boto.mturk.question import HTMLQuestion
 
 import simpleamt
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(parents=[simpleamt])
+  parser = argparse.ArgumentParser(parents=[simpleamt.get_parent_parser()])
   parser.add_argument('--hit_properties_file', type=argparse.FileType('r'))
   parser.add_argument('--html_template')
   parser.add_argument('--input_json_file', type=argparse.FileType('r'))
@@ -18,7 +19,7 @@ if __name__ == '__main__':
   simpleamt.setup_qualifications(hit_properties)
 
   frame_height = hit_properties.pop('frame_height')
-  env = simpleamt.get_jinja_env()
+  env = simpleamt.get_jinja_env(args.config)
   template = env.get_template(args.html_template)
 
   hit_ids = []
@@ -46,8 +47,8 @@ if __name__ == '__main__':
     hit_ids.append(hit_id)
 
   # TODO: Should the hit ids file be mandatory?
-  if options.hit_ids_file is not None:
-    with open(options.hit_ids_file, 'w') as f:
+  if args.hit_ids_file is not None:
+    with open(args.hit_ids_file, 'w') as f:
       for hit_id in hit_ids:
         f.write('%s\n' % hit_id)
 
