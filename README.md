@@ -60,9 +60,10 @@ python show_hit_progress.py --hit_ids_file=example/hit_ids.txt
 ### Get HIT results
 You can fetch the results of your completed HITs by running the following command:
 ```
-python get_results.py --hit_ids_file=example/hit_ids.txt > example/results.json
+python get_results.py --hit_ids_file=example/hit_ids.txt > example/results.txt
 ```
-The results of all completed HITs are now stored as a JSON blob in the file `example/results.json`.
+The results of all completed HITs are now stored as in the file `example/results.txt`.
+Each line of the file contains a JSON blob with the results from a single assignment.
 
 ### Approve work
 If you are satisfied with the results that you have gotten, you can approve all completed assignments from your HIT batch by running the following command:
