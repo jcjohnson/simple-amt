@@ -80,5 +80,6 @@ python disable_hits.py --hit_ids_file=example/hit_ids.txt
 
 ### Running on the production site
 To run your HITs on the production AMT site, simply append a `--prod` flag to each of the above commands.
+
 **WARNING:** Running HITs on sandbox is free, but running HITs on the production site is not. In order to launch HITs your Mechanical Turk account must have sufficient funds to pay for all HITs; these funds will be held in escrow by Amazon once you
 launch HITs, and will be paid to workers when you approve assignments. 
