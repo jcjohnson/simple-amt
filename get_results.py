@@ -37,4 +37,6 @@ if __name__ == '__main__':
         hit_id = line.strip()
         results += process_assignments(mtc, hit_id)
 
-  print json.dumps(results)
+  for assignment_result in results:
+    print json.dumps(assignment_result)
+
