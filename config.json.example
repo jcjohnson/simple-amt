@@ -1,5 +1,5 @@
 {
-  "template-directories": [
-    "templates"
-  ]
+  "template-directories": [ "templates" ],
+  "aws_access_key": "XXXXXXXXX",
+  "aws_secret_key": "XXXXXXXXX",
 }

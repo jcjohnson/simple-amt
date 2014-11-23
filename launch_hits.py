@@ -2,23 +2,23 @@ import argparse, json
 
 from boto.mturk.price import Price
 
-import boto_utils, utils
+import simpleamt
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(parents=[utils])
+  parser = argparse.ArgumentParser(parents=[simpleamt])
   parser.add_argument('--hit_properties_file', type=argparse.FileType('r'))
   parser.add_argument('--html_template')
   parser.add_argument('--input_json_file', type=argparse.FileType('r'))
   args = parser.parse_args()
 
-  mtc = boto_utils.get_mturk_connection_from_args(args)
+  mtc = simpleamt.get_mturk_connection_from_args(args)
 
   hit_properties = json.load(args.hit_properties_file)
   hit_properties['reward'] = Price(hit_properties['reward'])
-  boto_utils.setup_qualifications(hit_properties)
+  simpleamt.setup_qualifications(hit_properties)
 
   frame_height = hit_properties.pop('frame_height')
-  env = utils.get_jinja_env()
+  env = simpleamt.get_jinja_env()
   template = env.get_template(args.html_template)
 
   hit_ids = []
