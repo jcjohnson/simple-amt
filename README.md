@@ -83,3 +83,21 @@ To run your HITs on the production AMT site, simply append a `--prod` flag to ea
 
 **WARNING:** Running HITs on sandbox is free, but running HITs on the production site is not. In order to launch HITs your Mechanical Turk account must have sufficient funds to pay for all HITs; these funds will be held in escrow by Amazon once you
 launch HITs, and will be paid to workers when you approve assignments. 
+
+
+# Creating your own HITs
+To create your own HITs, you'll need to do the following:
+
+1. Create HTML template for HIT UI
+2. Create HIT properties file
+3. Prepare input file
+
+We'll walk through each of these steps in more detail.
+
+## Build HIT UI
+Building the UI is typically the most time-consuming step in creating a new type of HIT. You will have to do most of the work yourself, but simple-amt can still help. In this section we will use the provided image description HIT in 
+`hit_templates/example.html` as a running example.
+
+One of the core assumptions of simple-amt is that each HIT receives a single JSON blob as input, and produces a single
+JSON blob as output. To build UIs that follow this assumption, simple-amt provides a global Javascript object called
+`simpleamt` on the frontend to help you.
