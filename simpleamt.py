@@ -14,7 +14,7 @@ def get_jinja_env(config):
   """
   Get a jinja2 Environment object that we can use to find templates.
   """
-  return Environment(loader=FileSystemLoader(config['template-directories']))
+  return Environment(loader=FileSystemLoader(config['template_directories']))
 
 
 def json_file(filename):

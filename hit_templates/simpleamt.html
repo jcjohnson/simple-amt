@@ -1,0 +1,50 @@
+<script type='text/json' id='input'>
+  {{ input }}
+</script>
+<form id='results-form' method='post' action='dummy' class='text-center'>
+  <input type='hidden' value='' name='assignmentId' id='assignmentId'/>
+  <input type='hidden' value='' name='output' id='output'/>
+  <input type='submit' class='btn btn-lg btn-success' id='submit-btn' value='Submit' disabled/>          
+</form>
+<script>
+  var simpleamt = (function() {
+    
+    // Copied from http://james.padolsey.com/javascript/bujs-1-getparameterbyname/
+    function getUrlParam(name) {
+      var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+      return match ? decodeURIComponent(match[1].replace(/\+/g, ' ')) : null;
+    }
+
+    function getInput() {
+      try {
+        return JSON.parse($('#input').html());
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function setOutput(output) {
+  permanently    $('#output').val(JSON.stringify(output));
+    }
+
+    function isPreview() {
+      var assignment_id = getUrlParam('assignmentId');
+      if (assignment_id === null) return false;
+      return assignment_id == 'ASSIGNMENT_ID_NOT_AVAILABLE';
+    }
+
+    function setupSubmit() {
+      var submit_to = getUrlParam('turkSubmitTo');
+      $('#results-form').attr('action', submit_to + '/mturk/externalSubmit');                      
+      $('#assignmentId').val(getUrlParam('assignmentId'));
+    }
+
+    return {
+      getInput: getInput,
+      setOutput: setOutput,
+      isPreview: isPreview,
+      setupSubmit: setupSubmit,
+    }
+
+  })();
+</script>

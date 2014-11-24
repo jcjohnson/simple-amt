@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js'></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">    
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Name an example of a category</h1>
+      <label for='#text-answer'>
+        Give an example of a type of <span class='category'></span>:
+      </label>
+      <input type='text' id='text-answer'/>
+    </div>
+
+    {% include "simpleamt.html" %}
+
+    <script>
+      $(function() {
+        var input = { category: 'dog' };
+
+        $('span.category').text(input.category);
+      });
+    </script>
+  </body>
+</html>
