@@ -3,3 +3,4 @@
 config.json
 *.swp
 hit_templates_rendered/*
+config*.json
