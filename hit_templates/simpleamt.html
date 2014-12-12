@@ -15,11 +15,12 @@
       return match ? decodeURIComponent(match[1].replace(/\+/g, ' ')) : null;
     }
 
-    function getInput() {
+    function getInput(default_input) {
+      if (typeof(default_input) === 'undefined') default_input = null;
       try {
         return JSON.parse($('#input').html());
       } catch (e) {
-        return null;
+        return default_input;
       }
     }
 

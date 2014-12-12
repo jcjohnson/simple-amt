@@ -10,16 +10,69 @@
       <label for='#text-answer'>
         Give an example of a type of <span class='category'></span>:
       </label>
-      <input type='text' id='text-answer'/>
+      <input type='text' id='text-answer' disabled/>
     </div>
 
     {% include "simpleamt.html" %}
 
     <script>
       $(function() {
-        var input = { category: 'dog' };
+        // Define default input to be used when developing this HIT.
+        var DEFAULT_INPUT = { category: 'dog' };
 
-        $('span.category').text(input.category);
+        function main() {
+          // Read input to the HIT. In development the default input will be
+          // used, and in deployment actual input will be used.
+          var input = simpleamt.getInput(DEFAULT_INPUT);
+
+          // Use the input to set up the UI.
+          $('span.category').text(input.category);
+
+          // If the HIT is not in preview mode, then we need to enable the UI
+          // and set up the logic for submitting.
+          if (!simpleamt.isPreview()) {
+            enable_ui();
+
+            // You need to call this in every HIT; if you forget then you will
+            // get an error message when you try and submit the HIT.
+            simpleamt.setupSubmit();
+
+            // Set up a click handler for the submit button.
+            // Typically this will validate user output and either submit the
+            // HIT if the data is good or show an error message to the user if
+            // the data is bad. If this click handler returns false then the
+            // HIT will not be submitted.
+            // WARNING: If the click handler throws an exception
+            // then by default the HIT will be submitted; this is a fertile
+            // source of bugs.
+            $('#submit-btn').click(function() {
+              // Construct an object containing the output of this assignment.
+              var output = {
+                category: input.category,
+                example: $('#text-answer').val(),
+              };
+
+              // Validate the output
+              if (output.example.length < 3) {
+                alert('Your answer is not long enough');
+                return false;
+              } else {
+                simpleamt.setOutput(output);
+              }
+            })
+          }
+        }
+
+        function enable_ui() {
+          // Enable the UI specific to our HIT.
+          $('#text-answer').prop('disabled', false);
+
+          // Enable the submit button. You must do this in every HIT.
+          $('#submit-btn').prop('disabled', false);
+        }
+
+        main();
+
       });
     </script>
   </body>
