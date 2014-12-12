@@ -97,4 +97,14 @@ To create your own HITs, you'll need to do the following:
 We'll walk through each of these steps in more detail.
 
 ## Build HIT UI
-Building the UI is typically the most time-consuming step in creating a new type of HIT. You will have to do most of the work yourself, but simple-amt can still help.
+Building the UI is typically the most time-consuming step in creating a new type of HIT. You will have to do most of the work yourself, but simple-amt can still help. As a running example, we will use the UI defined in `hit_templates/simple.html`. This is a very basic HIT that asks workers to write an example of a category, like a type of dog or a flavor of ice cream.
+
+If you look at `hit_templates/simple.html`, you'll notice that it looks like regular HTML except for the line
+```
+{% include "simpleamt.html" %}
+```
+This includes the file `hit_templates/simpleamt.html`, which does two things:
+
+1. Sets up DOM elements where HIT input and output will be stored; the only one of these that you need to know is the submit button, which has the ID `#submit-btn`.
+2. Sets up a global Javascript object called `simpleamt` that defines functions for working with Mechanical Turk on the frontend.
+
