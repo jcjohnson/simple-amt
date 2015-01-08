@@ -2,6 +2,7 @@ import argparse, json
 
 from boto.mturk.price import Price
 from boto.mturk.question import HTMLQuestion
+from boto.mturk.connection import MTurkRequestError
 
 import simpleamt
 
