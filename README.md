@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ```
 
 ### Configure your Amazon account
-To use AMT, you'll need an Amazon AWS account. To interacti with Amazon, simple-amt needs
+To use AMT, you'll need an Amazon AWS account. To interact with Amazon, simple-amt needs
 an access key and corresponding secret key for your Amazon account. You can find these 
 [here](https://console.aws.amazon.com/iam/home?#security_credential). Once you have these,
 place then in a file called config.json for simple-amt:
@@ -30,7 +30,7 @@ cp config.json.example config.json
 **WARNING**: Your AWS keys provide full access to your AWS account, so be careful about where you store your config.json file!
 
 ### Launch some HITs
-We've included a sample HIT that asks workers to write sentences to describe images. To launch couple of these HITs on the AMT sandbox, run the following:
+We've included a sample HIT that asks workers to write sentences to describe images. To launch a couple of these HITs on the AMT sandbox, run the following:
 ```
 python launch_hits.py \
   --html_template=image_sentence.html \
