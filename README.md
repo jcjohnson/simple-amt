@@ -108,3 +108,27 @@ This includes the file `hit_templates/simpleamt.html`, which does two things:
 1. Sets up DOM elements where HIT input and output will be stored; the only one of these that you need to know is the submit button, which has the ID `#submit-btn`.
 2. Sets up a global Javascript object called `simpleamt` that defines functions for working with Mechanical Turk on the frontend.
 
+The Javascript `simpleamt` object provides the following functions:
+
+- `simpleamt.getInput(default_input)`: Attempts to get and parse the input JSON blob to this HIT. If this succeeds, the input JSON blob is returned as a Javascript object. If the input blob cannot be read (either during development when there is no input blob or if it cannot be parsed as valid JSON) then `default_input` is returned instead. If `default_input` is not passed to `getInput` then it defaults to `null`.
+- `simpleamt.setOutput(output)`: Store the output JSON blob for this HIT. `output` should be a Javascript object that can be serialized to JSON.
+- `simpleamt.isPreview()`: Check to see if this HIT is in preview mode. Amazon uses a url parameter called `assignmentId` to indicate whether a HIT is being previewed. If the parameter does not exist (such as during development) then `simpleamt.isPreview` returns `false`.
+- `simpleamt.setupSubmit()`: This performs a bit of bookkeeping to make it possible to submit results to Amazon. You **must** call this before the submit button is clicked; if you don't then Amazon will report an error when the user tries to submit the HIT.
+
+To see a minimal example of these functions in action, look at the file `hit_templates/simple.html`.
+
+While developing a HIT template, you will need to render the template to produce a valid HTML page that you can view in a browser. You can do this using the `render_template.py` script. Use it like this:
+
+```
+python render_template.py --html_template=simple.html
+```
+
+The rendered template will be stored in a directory called `rendered_templates` (you can change this by editing your config file).
+
+To actually view the rendered template in a web browser, you will need to run a local HTTP server so that protocol-relative URLs resolve properly. Python makes this very easy; just run
+
+```
+python -m SimpleHTTPServer 8080
+```
+
+then point your web browser at http://127.0.0.1:8080/.
