@@ -123,7 +123,7 @@ While developing a HIT template, you will need to render the template to produce
 python render_template.py --html_template=simple.html
 ```
 
-The rendered template will be stored in a directory called `rendered_templates` (you can change this by editing your config file).
+The rendered template will be stored in a directory called `rendered_templates` (you can change this by editing your config file). Whenever you change your HIT template you will need to rerender to see your changes.
 
 To actually view the rendered template in a web browser, you will need to run a local HTTP server so that protocol-relative URLs resolve properly. Python makes this very easy; just run
 
@@ -132,3 +132,17 @@ python -m SimpleHTTPServer 8080
 ```
 
 then point your web browser at http://127.0.0.1:8080/.
+
+## Create HIT properties file
+To launch HITs, you need both an HTML template defining the UI for the HIT and a JSON file storing properties of the HIT. An example JSON file is `hit_properties/simple.json`. A HIT properties JSON file has the following fields (some are required and some are optional):
+
+- `title`: Required. Must be a string. The title of your HIT. This will be the first part of your HIT that workers see, so it should be short and descriptive.
+- `description`: Required. Must be a string. If a worker is intruiged by your HIT title, they can click on it to see the description. This should be a couple of sentences at most, giving a brief description of the HIT.
+- `keywords`: Required. Must be a string of words separated by commas. These keywords are used by Mechanical Turk's search function. From my experience the Mechanical Turk search function isn't very smart, so it can help to explicitly conjugate verbs, include both singular and plural versions of nouns, and be creative to think of words that could be relevant. Picking good keywords for your HIT is a basically a small SEO problem.
+- `reward`: Required. Must be a number. This is the amount of money (in US dollars) that will be paid to workers per assignment. Keep in mind that Amazon charges the greater of 10% or 5 cents as a commission fee, so your actual cost per HIT will be slightly higher than the reward. You shoud also always pay at least 5 cents per HIT to avoid paying unnecessary commission fees to Amazon.
+- `duration`: Required. Must be an integer. This is the number of time (in seconds) that each worker has to complete the HIT before it expires. You should probably make this about 2 to 3 times the actual amount of time that you expect workers to spend on each assignment.
+- `frame_height`: Required. Must be an integer. When you HIT is displayed, Amazon renders the HIT content inside of an iframe. The height of the iframe is `frame_height` pixels. You should pick a number that is larger than your actual HIT content; if you don't then your HIT will be ugly and have nested scroll bars.
+- `max_assignments`: Required. Must be an integer. The number of assignments to create for each input. This means that `max_assignments` different workers will give you results for each HIT input.
+- `country`: Optional. Must be a string. If you set this, then only workers from the specified country will be allowed to work on your HITs. This must be either a valid [ISO 3166 country code](http://www.iso.org/iso/country_codes/country_codes) or a valid [ISO 3166-2 subdivision code](http://en.wikipedia.org/wiki/ISO_3166-2:US). I usually just use "US".
+- `hits_approved`: Optional. Must be an integer. If you set this, then only workers who have had at least this many HITs approved on Mechanical Turk will be allowed to work on your assignments.
+- `percent_approved`: Optional. Must be an integer. If you set this, then only workers who have had at least this percent of their submitted HITs approved will be allowed to work on your HITs.
