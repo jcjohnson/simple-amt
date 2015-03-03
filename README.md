@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ```
 
 ### Configure your Amazon account
-To use AMT, you'll need an Amazon AWS account. To interacti with Amazon, simple-amt needs
+To use AMT, you'll need an Amazon AWS account. To interact with Amazon, simple-amt needs
 an access key and corresponding secret key for your Amazon account. You can find these 
 [here](https://console.aws.amazon.com/iam/home?#security_credential). Once you have these,
 place then in a file called config.json for simple-amt:
@@ -30,7 +30,7 @@ cp config.json.example config.json
 **WARNING**: Your AWS keys provide full access to your AWS account, so be careful about where you store your config.json file!
 
 ### Launch some HITs
-We've included a sample HIT that asks workers to write sentences to describe images. To launch couple of these HITs on the AMT sandbox, run the following:
+We've included a sample HIT that asks workers to write sentences to describe images. To launch a couple of these HITs on the AMT sandbox, run the following:
 ```
 python launch_hits.py \
   --html_template=image_sentence.html \
@@ -108,3 +108,41 @@ This includes the file `hit_templates/simpleamt.html`, which does two things:
 1. Sets up DOM elements where HIT input and output will be stored; the only one of these that you need to know is the submit button, which has the ID `#submit-btn`.
 2. Sets up a global Javascript object called `simpleamt` that defines functions for working with Mechanical Turk on the frontend.
 
+The Javascript `simpleamt` object provides the following functions:
+
+- `simpleamt.getInput(default_input)`: Attempts to get and parse the input JSON blob to this HIT. If this succeeds, the input JSON blob is returned as a Javascript object. If the input blob cannot be read (either during development when there is no input blob or if it cannot be parsed as valid JSON) then `default_input` is returned instead. If `default_input` is not passed to `getInput` then it defaults to `null`.
+- `simpleamt.setOutput(output)`: Store the output JSON blob for this HIT. `output` should be a Javascript object that can be serialized to JSON.
+- `simpleamt.isPreview()`: Check to see if this HIT is in preview mode. Amazon uses a url parameter called `assignmentId` to indicate whether a HIT is being previewed. If the parameter does not exist (such as during development) then `simpleamt.isPreview` returns `false`.
+- `simpleamt.setupSubmit()`: This performs a bit of bookkeeping to make it possible to submit results to Amazon. You **must** call this before the submit button is clicked; if you don't then Amazon will report an error when the user tries to submit the HIT.
+
+To see a minimal example of these functions in action, look at the file `hit_templates/simple.html`.
+
+While developing a HIT template, you will need to render the template to produce a valid HTML page that you can view in a browser. You can do this using the `render_template.py` script. Use it like this:
+
+```
+python render_template.py --html_template=simple.html
+```
+
+The rendered template will be stored in a directory called `rendered_templates` (you can change this by editing your config file). Whenever you change your HIT template you will need to rerender to see your changes.
+
+To actually view the rendered template in a web browser, you will need to run a local HTTP server so that protocol-relative URLs resolve properly. Python makes this very easy; just run
+
+```
+python -m SimpleHTTPServer 8080
+```
+
+then point your web browser at http://127.0.0.1:8080/.
+
+## Create HIT properties file
+To launch HITs, you need both an HTML template defining the UI for the HIT and a JSON file storing properties of the HIT. An example JSON file is `hit_properties/simple.json`. A HIT properties JSON file has the following fields (some are required and some are optional):
+
+- `title`: Required. Must be a string. The title of your HIT. This will be the first part of your HIT that workers see, so it should be short and descriptive.
+- `description`: Required. Must be a string. If a worker is intruiged by your HIT title, they can click on it to see the description. This should be a couple of sentences at most, giving a brief description of the HIT.
+- `keywords`: Required. Must be a string of words separated by commas. These keywords are used by Mechanical Turk's search function. From my experience the Mechanical Turk search function isn't very smart, so it can help to explicitly conjugate verbs, include both singular and plural versions of nouns, and be creative to think of words that could be relevant. Picking good keywords for your HIT is a basically a small SEO problem.
+- `reward`: Required. Must be a number. This is the amount of money (in US dollars) that will be paid to workers per assignment. Keep in mind that Amazon charges the greater of 10% or 5 cents as a commission fee, so your actual cost per HIT will be slightly higher than the reward. You shoud also always pay at least 5 cents per HIT to avoid paying unnecessary commission fees to Amazon.
+- `duration`: Required. Must be an integer. This is the number of time (in seconds) that each worker has to complete the HIT before it expires. You should probably make this about 2 to 3 times the actual amount of time that you expect workers to spend on each assignment.
+- `frame_height`: Required. Must be an integer. When you HIT is displayed, Amazon renders the HIT content inside of an iframe. The height of the iframe is `frame_height` pixels. You should pick a number that is larger than your actual HIT content; if you don't then your HIT will be ugly and have nested scroll bars.
+- `max_assignments`: Required. Must be an integer. The number of assignments to create for each input. This means that `max_assignments` different workers will give you results for each HIT input.
+- `country`: Optional. Must be a string. If you set this, then only workers from the specified country will be allowed to work on your HITs. This must be either a valid [ISO 3166 country code](http://www.iso.org/iso/country_codes/country_codes) or a valid [ISO 3166-2 subdivision code](http://en.wikipedia.org/wiki/ISO_3166-2:US). I usually just use "US".
+- `hits_approved`: Optional. Must be an integer. If you set this, then only workers who have had at least this many HITs approved on Mechanical Turk will be allowed to work on your assignments.
+- `percent_approved`: Optional. Must be an integer. If you set this, then only workers who have had at least this percent of their submitted HITs approved will be allowed to work on your HITs.
