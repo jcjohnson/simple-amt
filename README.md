@@ -45,11 +45,17 @@ you can find it in `hit_templates/image_sentence.html`.
 - The file `examples/image_sentence/example_input.txt` contains inputs for the HITs that you want to create. The input to each HIT is a JSON object, and the input file contains one such JSON object per line. One HIT is created for each line of the input file.
 - The IDs of the created HITs are written to the file `examples/image_sentence/hit_ids.txt`. You will use this file as input to other commands in order to operate on the batch of HITs that you just created.
 
+*Note*: You may be seeing an error message scrolling repeatedly if you're setting up AMT for the first time, asking you to "Please log in to [https://requestersandbox.mturk.com/](https://requestersandbox.mturk.com/) and complete registration." You have to register on that URL first and then run again.
+
 ### Do your HITs
 Your HITs should now be live on the [Mechanical Turk sandbox](https://workersandbox.mturk.com/mturk/findhits).
 Open the sandbox and sort by "HIT creation data (newest first)".
 You should see a HIT with the title "*Write sentences to describe images*" in the first page or two of results.
 Complete one of the HITs.
+
+The HIT can sometimes take several seconds to appear. You can double check that the HIT is up and available by going to the [requester sandbox](https://requestersandbox.mturk.com/) page and clicking *manage -> manage hits individually*.
+
+Also note that you may not satisfy the qualitifications of your own HIT. In this case you can edit the file `hit_properties/image_sentence.json` and erase the lines corresponding to `hits_approved` and `percept_approved`. Remember to bring down the HITs you've launched (see below), and then re-launch the HIT (see above).
 
 ### Check HIT progress
 You can check the status of your in-progress HITs by running the following command:

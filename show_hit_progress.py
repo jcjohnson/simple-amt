@@ -18,7 +18,6 @@ if __name__ == '__main__':
   
   counter = Counter()
   for idx, hit_id in enumerate(hit_ids):
-    print 'Checking HIT %d / %d' % (idx + 1, len(hit_ids))
     hit = mtc.get_hit(hit_id)[0]
     total = int(hit.MaxAssignments)
     completed = 0
@@ -26,8 +25,9 @@ if __name__ == '__main__':
       s = a.AssignmentStatus
       if s == 'Submitted' or s == 'Approved':
         completed += 1
+    print 'HIT %d/%d: %d/%d assignments completed.' % (idx+1, len(hit_ids), completed, total)
     counter.update([(completed, total)])
 
   for (completed, total), count in counter.most_common():
-    print '%d / %d: %d' % (completed, total, count)
+    print ' completed %d / %d, count: %d' % (completed, total, count)
     
