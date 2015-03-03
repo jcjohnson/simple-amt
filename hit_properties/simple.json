@@ -5,5 +5,5 @@
   "reward": 0.05,
   "duration": 900,
   "frame_height": 20000,
-  "max_assignments": 1,
+  "max_assignments": 1
 }
