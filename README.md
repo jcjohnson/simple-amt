@@ -55,7 +55,7 @@ Complete one of the HITs.
 
 The HIT can sometimes take several seconds to appear. You can double check that the HIT is up and available by going to the [requester sandbox](https://requestersandbox.mturk.com/) page and clicking *manage -> manage hits individually*.
 
-Also note that you may not satisfy the qualitifications of your own HIT. In this case you can edit the file `hit_properties/image_sentence.json` and erase the lines corresponding to `hits_approved` and `percept_approved`. Remember to bring down the HITs you've launched (see below), and then re-launch the HIT (see above).
+Also note that you may not satisfy the qualifications of your own HIT. In this case you can edit the file `hit_properties/image_sentence.json` and erase the lines corresponding to `hits_approved` and `percept_approved`. Remember to bring down the HITs you've launched (see below), and then re-launch the HIT (see above).
 
 ### Check HIT progress
 You can check the status of your in-progress HITs by running the following command:
@@ -143,9 +143,9 @@ then point your web browser at http://127.0.0.1:8080/.
 To launch HITs, you need both an HTML template defining the UI for the HIT and a JSON file storing properties of the HIT. An example JSON file is `hit_properties/simple.json`. A HIT properties JSON file has the following fields (some are required and some are optional):
 
 - `title`: Required. Must be a string. The title of your HIT. This will be the first part of your HIT that workers see, so it should be short and descriptive.
-- `description`: Required. Must be a string. If a worker is intruiged by your HIT title, they can click on it to see the description. This should be a couple of sentences at most, giving a brief description of the HIT.
+- `description`: Required. Must be a string. If a worker is intrigued by your HIT title, they can click on it to see the description. This should be a couple of sentences at most, giving a brief description of the HIT.
 - `keywords`: Required. Must be a string of words separated by commas. These keywords are used by Mechanical Turk's search function. From my experience the Mechanical Turk search function isn't very smart, so it can help to explicitly conjugate verbs, include both singular and plural versions of nouns, and be creative to think of words that could be relevant. Picking good keywords for your HIT is a basically a small SEO problem.
-- `reward`: Required. Must be a number. This is the amount of money (in US dollars) that will be paid to workers per assignment. Keep in mind that Amazon charges the greater of 10% or 5 cents as a commission fee, so your actual cost per HIT will be slightly higher than the reward. You shoud also always pay at least 5 cents per HIT to avoid paying unnecessary commission fees to Amazon.
+- `reward`: Required. Must be a number. This is the amount of money (in US dollars) that will be paid to workers per assignment. Keep in mind that Amazon charges the greater of 20% or 0.1 cents as a commission fee, so your actual cost per HIT will be slightly higher than the reward. You should also always pay at least 5 cents per HIT to avoid paying unnecessary commission fees to Amazon.
 - `duration`: Required. Must be an integer. This is the number of time (in seconds) that each worker has to complete the HIT before it expires. You should probably make this about 2 to 3 times the actual amount of time that you expect workers to spend on each assignment.
 - `frame_height`: Required. Must be an integer. When you HIT is displayed, Amazon renders the HIT content inside of an iframe. The height of the iframe is `frame_height` pixels. You should pick a number that is larger than your actual HIT content; if you don't then your HIT will be ugly and have nested scroll bars.
 - `max_assignments`: Required. Must be an integer. The number of assignments to create for each input. This means that `max_assignments` different workers will give you results for each HIT input.
