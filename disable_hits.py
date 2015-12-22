@@ -10,7 +10,7 @@ if __name__ == '__main__':
 
   if (args.hit_ids_file is not None) == args.all:
     print 'Must specify exactly one of --hit_ids_file or --all'
-    sys.exit(1)
+    import sys; sys.exit(1)
 
   mtc = simpleamt.get_mturk_connection_from_args(args)
 
