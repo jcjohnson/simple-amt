@@ -73,6 +73,14 @@ python get_results.py \
 The results of all completed HITs are now stored as in the file `examples/image_sentence/results.txt`.
 Each line of the file contains a JSON blob with the results from a single assignment.
 
+If you collect your results before all your hits have been completed and need to call get results again, you can optimize the function by passing in the results you have already collected using the following command:
+```
+python get_results.py \
+  --hit_ids_file=examples/image_sentence/hit_ids.txt \
+  --output_file=examples/image_sentence/results.txt \
+  > examples/image_sentence/results.txt
+```
+
 ### Approve work
 If you are satisfied with the results that you have gotten, you can approve all completed assignments from your HIT batch by running the following command:
 ```
