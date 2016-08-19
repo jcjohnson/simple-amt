@@ -14,7 +14,7 @@ def get_jinja_env(config):
   """
   Get a jinja2 Environment object that we can use to find templates.
   """
-  return Environment(loader=FileSystemLoader(config['template_directories']))
+  return Environment(loader=FileSystemLoader('.'))
 
 
 def json_file(filename):
@@ -67,12 +67,26 @@ def get_mturk_connection(sandbox=True, aws_access_key=None,
   return MTurkConnection(host=host, **kwargs)
 
 
-def setup_qualifications(hit_properties):
+def setup_qualifications(hit_properties, mtc):
   """
   Replace some of the human-readable keys from the raw HIT properties
   JSON data structure with boto-specific objects.
   """
   qual = Qualifications()
+  if 'qualification_id' in hit_properties and 'qualification_comparator' in hit_properties and 'qualification_integer' in hit_properties:
+    comparator = hit_properties['qualification_comparator']
+    if comparator == '>': 
+        c = 'GreaterThan'
+    elif comparator == '=': 
+        c = 'EqualTo'
+    elif comparator == '<': 
+        c = 'LessThan'
+    else:
+        print "The 'qualification comparator' is not one of the designated values ('<', '=', '>')."
+    qual.add(Requirement(hit_properties['qualification_id'], c, int(hit_properties['qualification_integer']), required_to_preview = False));
+    del hit_properties['qualification_id']
+    del hit_properties['qualification_comparator']
+    del hit_properties['qualification_integer']
   if 'country' in hit_properties:
     qual.add(LocaleRequirement('EqualTo',
       hit_properties['country']))
