@@ -86,6 +86,16 @@ python disable_hits.py --hit_ids_file=examples/image_sentence/hit_ids.txt
 ```
 **WARNING:** After running this command, your HITs will no longer be visible to workers, and you will no longer be able to retrieve HIT results from Amazon. Make sure that you have saved the HIT results before running this command.
 
+### Rejecting Work
+If you are unhappy with the work done and want to reject the work, you can call the following command (please note that rejecting work harms worker's rating on the site and can influence their ability to find other work):
+```
+python approve_hits.py --hit_ids_file=examples/image_sentence/hit_ids.txt
+```
+
+Or you can also reject individual assignments:
+```
+python approve_assignments.py --assignment_ids_file=examples/image_sentence/assignment_ids.txt
+```
 ### Running on the production site
 To run your HITs on the production AMT site, simply append a `--prod` flag to each of the above commands.
 
