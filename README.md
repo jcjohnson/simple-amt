@@ -76,7 +76,12 @@ Each line of the file contains a JSON blob with the results from a single assign
 ### Approve work
 If you are satisfied with the results that you have gotten, you can approve all completed assignments from your HIT batch by running the following command:
 ```
-python approve_assignments.py --hit_ids_file=examples/image_sentence/hit_ids.txt
+python approve_hits.py --hit_ids_file=examples/image_sentence/hit_ids.txt
+```
+
+Or if you want to approve individual assignments, you can save all the assignments id in a file ```assignment_ids.txt``` and then call the following command:
+```
+python approve_assignments.py --assignment_ids_file=examples/image_sentence/assignment_ids.txt
 ```
 
 ### Delete HITs
