@@ -86,6 +86,17 @@ python disable_hits.py --hit_ids_file=examples/image_sentence/hit_ids.txt
 ```
 **WARNING:** After running this command, your HITs will no longer be visible to workers, and you will no longer be able to retrieve HIT results from Amazon. Make sure that you have saved the HIT results before running this command.
 
+### Blocking Workers
+In extreme cases, when you want to prevent a malicious worker from effecting your work, you can use the following commands to block or unblock them using their worker ids. Save the worker ids that you want to block in a file (e.g. ```worker_ids.txt```) and call the following to block workers:
+```
+python block_workers.py --worker_ids_file=examples/image_sentence/worker_ids.txt
+```
+
+or to unblock workers:
+```
+python unblock_workers.py --worker_ids_file=examples/image_sentence/worker_ids.txt
+```
+
 ### Running on the production site
 To run your HITs on the production AMT site, simply append a `--prod` flag to each of the above commands.
 
