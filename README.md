@@ -86,6 +86,13 @@ python disable_hits.py --hit_ids_file=examples/image_sentence/hit_ids.txt
 ```
 **WARNING:** After running this command, your HITs will no longer be visible to workers, and you will no longer be able to retrieve HIT results from Amazon. Make sure that you have saved the HIT results before running this command.
 
+### Get All HITs
+In the event that you want to get the results for all the hits that you have launched on mtc, regardless of what their hit ids are, you can call the following function. It will save a json array where every element is a hit result.
+```
+python get_all_hits.py \
+  > examples/image_sentence/all_results.txt
+```
+
 ### Running on the production site
 To run your HITs on the production AMT site, simply append a `--prod` flag to each of the above commands.
 
