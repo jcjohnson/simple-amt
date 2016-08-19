@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
   hit_properties = json.load(args.hit_properties_file)
   hit_properties['reward'] = Price(hit_properties['reward'])
-  simpleamt.setup_qualifications(hit_properties)
+  simpleamt.setup_qualifications(hit_properties, mtc)
 
   frame_height = hit_properties.pop('frame_height')
   env = simpleamt.get_jinja_env(args.config)
