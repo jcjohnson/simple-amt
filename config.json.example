@@ -1,5 +1,4 @@
 {
-  "rendered_template_directory" : "rendered_templates",
   "template_directories": [ "hit_templates" ],
   "aws_access_key": "XXXXXXXXX",
   "aws_secret_key": "XXXXXXXXX"
