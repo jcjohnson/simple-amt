@@ -86,6 +86,11 @@ python disable_hits.py --hit_ids_file=examples/image_sentence/hit_ids.txt
 ```
 **WARNING:** After running this command, your HITs will no longer be visible to workers, and you will no longer be able to retrieve HIT results from Amazon. Make sure that you have saved the HIT results before running this command.
 
+You can also disable individual hit ids from the command line:
+```
+python disable_hit.py --hit_id THE_HIT_ID_YOU_WANT_TO_DISABLE
+```
+
 ### Running on the production site
 To run your HITs on the production AMT site, simply append a `--prod` flag to each of the above commands.
 
