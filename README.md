@@ -115,6 +115,17 @@ You can also disable individual hit ids from the command line:
 python disable_hit.py --hit_id THE_HIT_ID_YOU_WANT_TO_DISABLE
 ```
 
+### Blocking Workers
+In extreme cases, when you want to prevent a malicious worker from affecting your work, you can use the following commands to block or unblock them using their worker ids. Save the worker ids that you want to block in a file (e.g. ```worker_ids.txt```) and call the following to block workers:
+```
+python block_workers.py --worker_ids_file=examples/image_sentence/worker_ids.txt
+```
+
+or to unblock workers:
+```
+python unblock_workers.py --worker_ids_file=examples/image_sentence/worker_ids.txt
+```
+
 ### Running on the production site
 To run your HITs on the production AMT site, simply append a `--prod` flag to each of the above commands.
 
