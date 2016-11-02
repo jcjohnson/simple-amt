@@ -93,6 +93,17 @@ python get_all_hits.py \
   > examples/image_sentence/all_results.txt
 ```
 
+### Rejecting Work
+If you are unhappy with the work done and want to reject the work, you can call the following command (please note that rejecting work harms worker's rating on the site and can influence their ability to find other work):
+```
+python reject_hits.py --hit_ids_file=examples/image_sentence/hit_ids.txt
+```
+
+Or you can also reject individual assignments:
+```
+python reject_assignments.py --assignment_ids_file=examples/image_sentence/assignment_ids.txt
+```
+
 ### Running on the production site
 To run your HITs on the production AMT site, simply append a `--prod` flag to each of the above commands.
 
