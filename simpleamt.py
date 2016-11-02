@@ -74,7 +74,7 @@ def setup_qualifications(hit_properties):
   """
   qual = Qualifications()
   if 'country' in hit_properties:
-    qual.add(LocaleRequirement('EqualTo',
+    qual.add(LocaleRequirement('In',
       hit_properties['country']))
     del hit_properties['country']
 
