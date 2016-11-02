@@ -159,3 +159,6 @@ To launch HITs, you need both an HTML template defining the UI for the HIT and a
 - `country`: Optional. Must be a string. If you set this, then only workers from the specified country will be allowed to work on your HITs. This must be either a valid [ISO 3166 country code](http://www.iso.org/iso/country_codes/country_codes) or a valid [ISO 3166-2 subdivision code](http://en.wikipedia.org/wiki/ISO_3166-2:US). I usually just use "US".
 - `hits_approved`: Optional. Must be an integer. If you set this, then only workers who have had at least this many HITs approved on Mechanical Turk will be allowed to work on your assignments.
 - `percent_approved`: Optional. Must be an integer. If you set this, then only workers who have had at least this percent of their submitted HITs approved will be allowed to work on your HITs.
+- `qualification_id`: Optional. If you have assigned qualifications to some workers, then this is only allow those workers with this qualification id to work on your hits.
+- `qualification_comparator`: Optional. Must be one of `<`, `=`, or `>`. This helps decide whether you want the workers to have a qualification that is greater, equal or less than the `qualification_integer`.
+- `qualification_integer`: Optional. Must be an integer. The value used to threshold workers to be above, equal or below (determined by `qualification_comparator`).
