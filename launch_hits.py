@@ -27,32 +27,33 @@ if __name__ == '__main__':
 
   if args.hit_ids_file is None:
     print 'Need to input a hit_ids_file'
+    sys.exit()
   if os.path.isfile(args.hit_ids_file):
     print 'hit_ids_file already exists'
     sys.exit()
-  hit_ids_file = open(args.hit_ids_file, 'w')
 
-  for i, line in enumerate(args.input_json_file):
-    hit_input = json.loads(line.strip())
+  with open(args.hit_ids_file, 'w') as hit_ids_file:
+    for i, line in enumerate(args.input_json_file):
+      hit_input = json.loads(line.strip())
 
-    # In a previous version I removed all single quotes from the json dump.
-    # TODO: double check to see if this is still necessary.
-    template_params = { 'input': json.dumps(hit_input) }
-    html = template.render(template_params)
-    html_question = HTMLQuestion(html, frame_height)
-    hit_properties['question'] = html_question
+      # In a previous version I removed all single quotes from the json dump.
+      # TODO: double check to see if this is still necessary.
+      template_params = { 'input': json.dumps(hit_input) }
+      html = template.render(template_params)
+      html_question = HTMLQuestion(html, frame_height)
+      hit_properties['question'] = html_question
 
-    # This error handling is kinda hacky.
-    # TODO: Do something better here.
-    launched = False
-    while not launched:
-      try:
-        boto_hit = mtc.create_hit(**hit_properties)
-        launched = True
-      except MTurkRequestError as e:
-        print e
-    hit_id = boto_hit[0].HITId
-    hit_ids_file.write('%s\n' % hit_id)
-    print 'Launched HIT ID: %s, %d' % (hit_id, i + 1)
+      # This error handling is kinda hacky.
+      # TODO: Do something better here.
+      launched = False
+      while not launched:
+        try:
+          boto_hit = mtc.create_hit(**hit_properties)
+          launched = True
+        except MTurkRequestError as e:
+          print e
+      hit_id = boto_hit[0].HITId
+      hit_ids_file.write('%s\n' % hit_id)
+      print 'Launched HIT ID: %s, %d' % (hit_id, i + 1)
 
 
