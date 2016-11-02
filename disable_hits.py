@@ -10,7 +10,7 @@ if __name__ == '__main__':
 
   if (args.hit_ids_file is not None) == args.all:
     print 'Must specify exactly one of --hit_ids_file or --all'
-    import sys; sys.exit(1)
+    sys.exit(1)
 
   mtc = simpleamt.get_mturk_connection_from_args(args)
 
@@ -27,7 +27,11 @@ if __name__ == '__main__':
   print 'Continue?'
   s = raw_input('(Y/N): ')
   if s == 'Y' or s == 'y':
-    for hit_id in hit_ids:
-      mtc.disable_hit(hit_id)
+    for index, hit_id in enumerate(hit_ids):
+      try:
+        mtc.disable_hit(hit_id)
+        print 'disabling: %d / %d' % (index+1, len(hit_ids))
+      except:
+        print 'Failed to disable: %s' % (hit_id)
   else:
     print 'Aborting'
