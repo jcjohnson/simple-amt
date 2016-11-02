@@ -2,35 +2,36 @@ import argparse, json
 import simpleamt
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(add_help=False)
-  parser.add_argument('--prod', action='store_false', dest='sandbox',
-                      default=True,
-                      help="Whether to run on the production AMT site.")
-  parser.add_argument('--assignment_ids_file')
+  parser = argparse.ArgumentParser(parents=[simpleamt.get_parent_parser()])
   parser.add_argument('-f', action='store_true', default=False)
-  parser.add_argument('--config', default='config.json', type=simpleamt.json_file)
   args = parser.parse_args()
   mtc = simpleamt.get_mturk_connection_from_args(args)
 
   approve_ids = []
   reject_ids = []
 
-  if args.assignment_ids_file is None:
-    parser.error('Must specify --assignment_ids_file.')
+  if args.hit_ids_file is None:
+    parser.error('Must specify --hit_ids_file.')
 
-  with open(args.assignment_ids_file, 'r') as f:
-    assignment_ids = [line.strip() for line in f]
+  with open(args.hit_ids_file, 'r') as f:
+    hit_ids = [line.strip() for line in f]
 
-  for a_id in assignment_ids:
-    a = mtc.get_assignment(a_id)[0]
-    if a.AssignmentStatus == 'Submitted':
-      try:
-        # Try to parse the output from the assignment. If it isn't
-        # valid JSON then we reject the assignment.
-        output = json.loads(a.answers[0][0].fields[0])
-        approve_ids.append(a_id)
-      except ValueError as e:
-        reject_ids.append(a_id)
+  for hit_id in hit_ids:
+    try:
+      assignments = mtc.get_assignments(hit_id)
+    except:
+      continue
+    for a in assignments:
+      if a.AssignmentStatus == 'Submitted':
+        try:
+          # Try to parse the output from the assignment. If it isn't
+          # valid JSON then we reject the assignment.
+          output = json.loads(a.answers[0][0].fields[0])
+          approve_ids.append(a.AssignmentId)
+        except ValueError as e:
+          reject_ids.append(a.AssignmentId)
+      else:
+        print "hit %s has already been %s" % (str(hit_id), a.AssignmentStatus)
 
   print ('This will approve %d assignments and reject %d assignments with '
          'sandbox=%s' % (len(approve_ids), len(reject_ids), str(args.sandbox)))
