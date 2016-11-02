@@ -4,7 +4,9 @@ from boto.mturk.price import Price
 from boto.mturk.question import HTMLQuestion
 from boto.mturk.connection import MTurkRequestError
 
+import os
 import simpleamt
+import sys
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(parents=[simpleamt.get_parent_parser()])
@@ -23,7 +25,13 @@ if __name__ == '__main__':
   env = simpleamt.get_jinja_env(args.config)
   template = env.get_template(args.html_template)
 
-  hit_ids = []
+  if args.hit_ids_file is None:
+    print 'Need to input a hit_ids_file'
+  if os.path.isfile(args.hit_ids_file):
+    print 'hit_ids_file already exists'
+    sys.exit()
+  hit_ids_file = open(args.hit_ids_file, 'w')
+
   for i, line in enumerate(args.input_json_file):
     hit_input = json.loads(line.strip())
 
@@ -39,17 +47,12 @@ if __name__ == '__main__':
     launched = False
     while not launched:
       try:
-        print 'Trying to launch HIT %d' % (i + 1)
         boto_hit = mtc.create_hit(**hit_properties)
         launched = True
       except MTurkRequestError as e:
         print e
     hit_id = boto_hit[0].HITId
-    hit_ids.append(hit_id)
+    hit_ids_file.write('%s\n' % hit_id)
+    print 'Launched HIT ID: %s, %d' % (hit_id, i + 1)
 
-  # TODO: Should the hit ids file be mandatory?
-  if args.hit_ids_file is not None:
-    with open(args.hit_ids_file, 'w') as f:
-      for hit_id in hit_ids:
-        f.write('%s\n' % hit_id)
 
