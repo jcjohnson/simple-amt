@@ -115,6 +115,8 @@ python reject_hits.py --hit_ids_file=examples/image_sentence/hit_ids.txt
 Or you can also reject individual assignments:
 ```
 python reject_assignments.py --assignment_ids_file=examples/image_sentence/assignment_ids.txt
+```
+
 You can also disable individual hit ids from the command line:
 ```
 python disable_hit.py --hit_id THE_HIT_ID_YOU_WANT_TO_DISABLE
