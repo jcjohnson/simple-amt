@@ -19,20 +19,20 @@ if __name__ == '__main__':
         for a in mtc.get_assignments(hit_id):
             reject_ids.append(a.AssignmentId)
     except:
-      print "Couldn't find hit_id: %s" % (hit_id)
+      print("Couldn't find hit_id: %s" % (hit_id))
 
-  print ('This will reject %d assignments with '
+  print('This will reject %d assignments with '
          'sandbox=%s' % (len(reject_ids), str(args.sandbox)))
-  print 'Continue?'
+  print('Continue?')
 
-  s = raw_input('(Y/N): ')
+  s = input('(Y/N): ')
   if s == 'Y' or s == 'y':
-    print 'Rejecting assignments'
+    print('Rejecting assignments')
     for idx, assignment_id in enumerate(reject_ids):
-      print 'Rejecting assignment %d / %d' % (idx + 1, len(reject_ids))
+      print('Rejecting assignment %d / %d' % (idx + 1, len(reject_ids)))
       try:
         mtc.reject_assignment(assignment_id, feedback='Invalid results')
       except:
-        print "Could not reject: %s" % (assignment_id)
+        print("Could not reject: %s" % (assignment_id))
   else:
-    print 'Aborting'
+    print('Aborting')

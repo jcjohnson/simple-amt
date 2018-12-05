@@ -69,5 +69,5 @@ if __name__ == '__main__':
         results += process_assignments(mtc, hit_id, status)
 
   for assignment_result in results:
-    print json.dumps(assignment_result)
+    print(json.dumps(assignment_result))
 

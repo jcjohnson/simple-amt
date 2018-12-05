@@ -12,15 +12,15 @@ if __name__ == '__main__':
   with open(args.worker_ids_file, 'r') as f:
     worker_ids = [line.strip() for line in f]
 
-  print ('This will block %d workers with IDs with sandbox=%s'
+  print('This will block %d workers with IDs with sandbox=%s'
          % (len(worker_ids), str(args.sandbox)))
-  print 'Continue?'
-  s = raw_input('(Y/N): ')
+  print('Continue?')
+  s = input('(Y/N): ')
   if s == 'Y' or s == 'y':
     for worker_id in worker_ids:
       try:
         mtc.unblock_worker(worker_id, "provided bad data")
       except:
-        print 'Failed to block: %s' % (worker_id)
+        print('Failed to block: %s' % (worker_id))
   else:
-    print 'Aborting'
+    print('Aborting')
