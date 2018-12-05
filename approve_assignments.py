@@ -32,21 +32,21 @@ if __name__ == '__main__':
       except ValueError as e:
         reject_ids.append(a_id)
 
-  print ('This will approve %d assignments and reject %d assignments with '
+  print('This will approve %d assignments and reject %d assignments with '
          'sandbox=%s' % (len(approve_ids), len(reject_ids), str(args.sandbox)))
-  print 'Continue?'
+  print('Continue?')
 
   if not args.f:
-    s = raw_input('(Y/N): ')
+    s = input('(Y/N): ')
   else:
     s = 'Y'
   if s == 'Y' or s == 'y':
-    print 'Approving assignments'
+    print('Approving assignments')
     for idx, assignment_id in enumerate(approve_ids):
-      print 'Approving assignment %d / %d' % (idx + 1, len(approve_ids))
+      print('Approving assignment %d / %d' % (idx + 1, len(approve_ids)))
       mtc.approve_assignment(assignment_id)
     for idx, assignment_id in enumerate(reject_ids):
-      print 'Rejecting assignment %d / %d' % (idx + 1, len(reject_ids))
+      print('Rejecting assignment %d / %d' % (idx + 1, len(reject_ids)))
       mtc.reject_assignment(assignment_id, feedback='Invalid results')
   else:
-    print 'Aborting'
+    print('Aborting')

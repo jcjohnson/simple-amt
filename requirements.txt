@@ -1,4 +1,19 @@
-Jinja2==2.7.3
-MarkupSafe==0.23
-boto==2.42.0
-wsgiref==0.1.2
+##################
+#                #
+# for python 2.* #
+#                #
+##################
+# Jinja2==2.7.3
+# MarkupSafe==0.23
+# boto==2.42.0
+# wsgiref==0.1.2
+
+##################
+#                #
+# for python 3.* #
+#                #
+##################
+Jinja2
+MarkupSafe
+boto3
+wsgiref

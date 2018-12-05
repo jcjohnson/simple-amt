@@ -17,18 +17,18 @@ if __name__ == '__main__':
   with open(args.assignment_ids_file, 'r') as f:
     assignment_ids = [line.strip() for line in f]
 
-  print ('This will reject %d assignments with '
+  print('This will reject %d assignments with '
          'sandbox=%s' % (len(assignment_ids), str(args.sandbox)))
-  print 'Continue?'
+  print('Continue?')
 
-  s = raw_input('(Y/N): ')
+  s = input('(Y/N): ')
   if s == 'Y' or s == 'y':
-    print 'Rejecting assignments'
+    print('Rejecting assignments')
     for idx, assignment_id in enumerate(assignment_ids):
-      print 'Rejecting assignment %d / %d' % (idx + 1, len(assignment_ids))
+      print('Rejecting assignment %d / %d' % (idx + 1, len(assignment_ids)))
       try:
         mtc.reject_assignment(assignment_id, feedback='Invalid results')
       except:
-        print "Could not reject: %s" % (assignment_id)
+        print("Could not reject: %s" % (assignment_id))
   else:
-    print 'Aborting'
+    print('Aborting')

@@ -18,11 +18,11 @@ if __name__ == '__main__':
 
   counter = Counter()
   for idx, hit_id in enumerate(hit_ids):
-    print 'Checking HIT %d / %d' % (idx + 1, len(hit_ids))
+    print('Checking HIT %d / %d' % (idx + 1, len(hit_ids)))
     try:
       hit = mtc.get_hit(hit_id)[0]
     except:
-      print 'Can\'t find hit id: %d' % (hit_id)
+      print('Can\'t find hit id: %d' % (hit_id))
       continue
     total = int(hit.MaxAssignments)
     completed = 0
@@ -33,5 +33,5 @@ if __name__ == '__main__':
     counter.update([(completed, total)])
 
   for (completed, total), count in counter.most_common():
-    print '%d / %d: %d' % (completed, total, count)
+    print('%d / %d: %d' % (completed, total, count))
 
