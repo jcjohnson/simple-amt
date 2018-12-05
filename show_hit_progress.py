@@ -34,4 +34,3 @@ if __name__ == '__main__':
 
   for (completed, total), count in counter.most_common():
     print('%d / %d: %d' % (completed, total, count))
-

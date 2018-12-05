@@ -16,4 +16,3 @@
 Jinja2
 MarkupSafe
 boto3
-wsgiref
