@@ -1,7 +1,6 @@
 import argparse, json
 
-from boto.mturk.connection import MTurkConnection
-from boto.mturk.qualification import *
+import boto3
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -50,9 +49,8 @@ def get_mturk_connection_from_args(args):
 def get_mturk_connection(sandbox=True, aws_access_key=None,
                          aws_secret_key=None):
   """
-  Get a boto mturk connection. This is a thin wrapper over the
-  MTurkConnection constructor; the only difference is a boolean
-  flag to indicate sandbox or not.
+  Get a boto mturk connection. This is a thin wrapper over boto3.client; 
+  the only difference is a boolean flag to indicate sandbox or not.
   """
   kwargs = {}
   if aws_access_key is not None:
@@ -61,10 +59,10 @@ def get_mturk_connection(sandbox=True, aws_access_key=None,
     kwargs['aws_secret_access_key'] = aws_secret_key
 
   if sandbox:
-    host = 'mechanicalturk.sandbox.amazonaws.com'
+    host = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
   else:
-    host='mechanicalturk.amazonaws.com'
-  return MTurkConnection(host=host, **kwargs)
+    host='https://mturk-requester.us-east-1.amazonaws.com'
+  return boto3.client('mturk', endpoint_url=host, **kwargs)
 
 
 def setup_qualifications(hit_properties, mtc):
@@ -72,9 +70,9 @@ def setup_qualifications(hit_properties, mtc):
   Replace some of the human-readable keys from the raw HIT properties
   JSON data structure with boto-specific objects.
   """
-  qual = Qualifications()
-  if 'qualification_id' in hit_properties and 'qualification_comparator' in hit_properties and 'qualification_integer' in hit_properties:
-    comparator = hit_properties['qualification_comparator']
+  qual = []
+  if 'Qualification_id' in hit_properties and 'Qualification_comparator' in hit_properties and 'Qualification_integer' in hit_properties:
+    comparator = hit_properties['Qualification_comparator']
     if comparator == '>': 
         c = 'GreaterThan'
     elif comparator == '=': 
@@ -83,23 +81,37 @@ def setup_qualifications(hit_properties, mtc):
         c = 'LessThan'
     else:
         print("The 'qualification comparator' is not one of the designated values ('<', '=', '>').")
-    qual.add(Requirement(hit_properties['qualification_id'], c, int(hit_properties['qualification_integer']), required_to_preview = False));
-    del hit_properties['qualification_id']
-    del hit_properties['qualification_comparator']
-    del hit_properties['qualification_integer']
-  if 'country' in hit_properties:
-    qual.add(LocaleRequirement('In',
-      hit_properties['country']))
-    del hit_properties['country']
+    qual.append({
+        'QualificationTypeId': hit_properties['Qualification_id'],
+        'Comparator': c,
+        'IntegerValues': int(hit_properties['Qualification_integer']),
+        'RequiredToPreview': False,
+    })
+    del hit_properties['Qualification_id']
+    del hit_properties['Qualification_comparator']
+    del hit_properties['Qualification_integer']
+  if 'Country' in hit_properties:
+    qual.append({
+        'QualificationTypeId': '00000000000000000071',
+        'Comparator': 'In',
+        'LocaleValues': [{'Country': country} for country in hit_properties['Country']],
+    })
+    del hit_properties['Country']
 
-  if 'hits_approved' in hit_properties:
-    qual.add(NumberHitsApprovedRequirement('GreaterThan',
-      hit_properties['hits_approved']))
-    del hit_properties['hits_approved']
+  if 'Hits_approved' in hit_properties:
+    qual.append({
+        'QualificationTypeId': '00000000000000000040',
+        'Comparator': 'GreaterThan',
+        'IntegerValues': [hit_properties['Hits_approved']],
+    })
+    del hit_properties['Hits_approved']
 
-  if 'percent_approved' in hit_properties:
-    qual.add(PercentAssignmentsApprovedRequirement('GreaterThan',
-      hit_properties['percent_approved']))
-    del hit_properties['percent_approved']
+  if 'Percent_approved' in hit_properties:
+    qual.append({
+        'QualificationTypeId': '000000000000000000L0',
+        'Comparator': 'GreaterThan',
+        'IntegerValues': [hit_properties['Percent_approved']],
+    })
+    del hit_properties['Percent_approved']
 
-  hit_properties['qualifications'] = qual
+  hit_properties['QualificationRequirements'] = qual

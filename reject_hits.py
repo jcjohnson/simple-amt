@@ -15,10 +15,12 @@ if __name__ == '__main__':
     hit_ids = [line.strip() for line in f]
 
   for hit_id in hit_ids:
+    paginator = mtc.get_paginator('list_assignments_for_hit')
     try:
-        for a in mtc.get_assignments(hit_id):
-            reject_ids.append(a.AssignmentId)
-    except:
+      for a_page in paginator.paginate(HITId=hit_id, PaginationConfig={'PageSize': 100}):
+        for a in a_page['Assignments']:
+          reject_ids.append(a['AssignmentId'])
+    except mtc.exceptions.RequestError:
       print("Couldn't find hit_id: %s" % (hit_id))
 
   print('This will reject %d assignments with '
@@ -31,7 +33,7 @@ if __name__ == '__main__':
     for idx, assignment_id in enumerate(reject_ids):
       print('Rejecting assignment %d / %d' % (idx + 1, len(reject_ids)))
       try:
-        mtc.reject_assignment(assignment_id, feedback='Invalid results')
+        mtc.reject_assignment(AssignmentId, RequesterFeedback='Invalid results')
       except:
         print("Could not reject: %s" % (assignment_id))
   else:

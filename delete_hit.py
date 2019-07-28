@@ -16,8 +16,8 @@ if __name__ == '__main__':
   s = input('(Y/N): ')
   if s == 'Y' or s == 'y':
     try:
-      mtc.disable_hit(hit_id)
+      mtc.delete_hit(HITId=hit_id)
     except:
-      print('Failed to disable: %s' % (hit_id))
+      print('Failed to delete: %s' % (hit_id))
   else:
     print('Aborting')
