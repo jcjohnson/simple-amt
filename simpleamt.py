@@ -71,8 +71,8 @@ def setup_qualifications(hit_properties, mtc):
   JSON data structure with boto-specific objects.
   """
   qual = []
-  if 'Qualification_id' in hit_properties and 'Qualification_comparator' in hit_properties and 'Qualification_integer' in hit_properties:
-    comparator = hit_properties['Qualification_comparator']
+  if 'QualificationId' in hit_properties and 'QualificationComparator' in hit_properties and 'QualificationInteger' in hit_properties:
+    comparator = hit_properties['QualificationComparator']
     if comparator == '>': 
         c = 'GreaterThan'
     elif comparator == '=': 
@@ -82,14 +82,14 @@ def setup_qualifications(hit_properties, mtc):
     else:
         print("The 'qualification comparator' is not one of the designated values ('<', '=', '>').")
     qual.append({
-        'QualificationTypeId': hit_properties['Qualification_id'],
+        'QualificationTypeId': hit_properties['QualificationId'],
         'Comparator': c,
-        'IntegerValues': int(hit_properties['Qualification_integer']),
+        'IntegerValues': int(hit_properties['QualificationInteger']),
         'RequiredToPreview': False,
     })
-    del hit_properties['Qualification_id']
-    del hit_properties['Qualification_comparator']
-    del hit_properties['Qualification_integer']
+    del hit_properties['QualificationId']
+    del hit_properties['QualificationComparator']
+    del hit_properties['QualificationInteger']
   if 'Country' in hit_properties:
     qual.append({
         'QualificationTypeId': '00000000000000000071',
@@ -98,20 +98,20 @@ def setup_qualifications(hit_properties, mtc):
     })
     del hit_properties['Country']
 
-  if 'Hits_approved' in hit_properties:
+  if 'HitsApproved' in hit_properties:
     qual.append({
         'QualificationTypeId': '00000000000000000040',
         'Comparator': 'GreaterThan',
-        'IntegerValues': [hit_properties['Hits_approved']],
+        'IntegerValues': [hit_properties['HitsApproved']],
     })
-    del hit_properties['Hits_approved']
+    del hit_properties['HitsApproved']
 
-  if 'Percent_approved' in hit_properties:
+  if 'PercentApproved' in hit_properties:
     qual.append({
         'QualificationTypeId': '000000000000000000L0',
         'Comparator': 'GreaterThan',
-        'IntegerValues': [hit_properties['Percent_approved']],
+        'IntegerValues': [hit_properties['PercentApproved']],
     })
-    del hit_properties['Percent_approved']
+    del hit_properties['PercentApproved']
 
   hit_properties['QualificationRequirements'] = qual

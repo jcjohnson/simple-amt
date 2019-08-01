@@ -55,7 +55,7 @@ Complete one of the HITs.
 
 The HIT can sometimes take several seconds to appear. You can double check that the HIT is up and available by going to the [requester sandbox](https://requestersandbox.mturk.com/) page and clicking *manage -> manage hits individually*.
 
-Also note that you may not satisfy the qualifications of your own HIT. In this case you can edit the file `hit_properties/image_sentence.json` and erase the lines corresponding to `hits_approved` and `percept_approved`. Remember to bring down the HITs you've launched (see below), and then re-launch the HIT (see above).
+Also note that you may not satisfy the qualifications of your own HIT. In this case you can edit the file `hit_properties/image_sentence.json` and erase the lines corresponding to `HitsApproved` and `PercentApproved`. Remember to bring down the HITs you've launched (see below), and then re-launch the HIT (see above).
 
 ### Check HIT progress
 You can check the status of your in-progress HITs by running the following command:
@@ -194,11 +194,11 @@ To launch HITs, you need both an HTML template defining the UI for the HIT and a
 - `Keywords`: Required. Must be a string of words separated by commas. These keywords are used by Mechanical Turk's search function. From my experience the Mechanical Turk search function isn't very smart, so it can help to explicitly conjugate verbs, include both singular and plural versions of nouns, and be creative to think of words that could be relevant. Picking good keywords for your HIT is a basically a small SEO problem.
 - `Reward`: Required. Must be a number. This is the amount of money (in US dollars) that will be paid to workers per assignment. Keep in mind that Amazon charges the greater of 20% or 0.1 cents as a commission fee, so your actual cost per HIT will be slightly higher than the reward. You should also always pay at least 5 cents per HIT to avoid paying unnecessary commission fees to Amazon.
 - `AssignmentDurationInSeconds`: Required. Must be an integer. This is the number of time (in seconds) that each worker has to complete the HIT before it expires. You should probably make this about 2 to 3 times the actual amount of time that you expect workers to spend on each assignment.
-- `fFrame_height`: Required. Must be an integer. When you HIT is displayed, Amazon renders the HIT content inside of an iframe. The height of the iframe is `Frame_height` pixels. You should pick a number that is larger than your actual HIT content; if you don't then your HIT will be ugly and have nested scroll bars.
+- `FrameHeight`: Required. Must be an integer. When you HIT is displayed, Amazon renders the HIT content inside of an iframe. The height of the iframe is `FrameHeight` pixels. You should pick a number that is larger than your actual HIT content; if you don't then your HIT will be ugly and have nested scroll bars.
 - `MaxAssignments`: Required. Must be an integer. The number of assignments to create for each input. This means that `MaxAssignments` different workers will give you results for each HIT input.
 - `Country`: Optional. Must be a string. If you set this, then only workers from the specified country will be allowed to work on your HITs. This must be either a valid [ISO 3166 country code](http://www.iso.org/iso/country_codes/country_codes) or a valid [ISO 3166-2 subdivision code](http://en.wikipedia.org/wiki/ISO_3166-2:US). I usually just use "US".
-- `Hits_approved`: Optional. Must be an integer. If you set this, then only workers who have had at least this many HITs approved on Mechanical Turk will be allowed to work on your assignments.
-- `Percent_approved`: Optional. Must be an integer. If you set this, then only workers who have had at least this percent of their submitted HITs approved will be allowed to work on your HITs.
-- `Qualification_id`: Optional. If you have assigned qualifications to some workers, then this is only allow those workers with this qualification id to work on your hits.
-- `Qualification_comparator`: Optional. Must be one of `<`, `=`, or `>`. This helps decide whether you want the workers to have a qualification that is greater, equal or less than the `Qualification_integer`.
-- `Qualification_integer`: Optional. Must be an integer. The value used to threshold workers to be above, equal or below (determined by `Qualification_comparator`).
+- `HitsApproved`: Optional. Must be an integer. If you set this, then only workers who have had at least this many HITs approved on Mechanical Turk will be allowed to work on your assignments.
+- `PercentApproved`: Optional. Must be an integer. If you set this, then only workers who have had at least this percent of their submitted HITs approved will be allowed to work on your HITs.
+- `QualificationId`: Optional. If you have assigned qualifications to some workers, then this is only allow those workers with this qualification id to work on your hits.
+- `QualificationComparator`: Optional. Must be one of `<`, `=`, or `>`. This helps decide whether you want the workers to have a qualification that is greater, equal or less than the `QualificationInteger`.
+- `QualificationInteger`: Optional. Must be an integer. The value used to threshold workers to be above, equal or below (determined by `QualificationComparator`).

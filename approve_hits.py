@@ -24,8 +24,8 @@ if __name__ == '__main__':
         for a in a_page['Assignments']:
           if a['AssignmentStatus'] == 'Submitted':
             try:
-            # Try to parse the output from the assignment. If it isn't
-            # valid JSON then we reject the assignment.
+              # Try to parse the output from the assignment. If it isn't
+              # valid JSON then we reject the assignment.
               json.loads(re.search(r'<FreeText>(?P<answer>.*?)</FreeText>', a['Answer'])['answer'])
               approve_ids.append(a['AssignmentId'])
             except ValueError as e:

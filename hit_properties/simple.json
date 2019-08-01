@@ -4,6 +4,6 @@
   "Keywords": "write,writing,category,example,examples",
   "Reward": 0.05,
   "AssignmentDurationInSeconds": 900,
-  "Frame_height": 20000,
+  "FrameHeight": 20000,
   "MaxAssignments": 1
 }

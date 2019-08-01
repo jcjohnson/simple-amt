@@ -17,7 +17,7 @@ if __name__ == '__main__':
   hit_properties['Reward'] = str(hit_properties['Reward'])
   simpleamt.setup_qualifications(hit_properties, mtc)
 
-  frame_height = hit_properties.pop('Frame_height')
+  frame_height = hit_properties.pop('FrameHeight')
   env = simpleamt.get_jinja_env(args.config)
   template = env.get_template(args.html_template)
 
