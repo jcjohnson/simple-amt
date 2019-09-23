@@ -84,7 +84,7 @@ def setup_qualifications(hit_properties, mtc):
     qual.append({
         'QualificationTypeId': hit_properties['QualificationId'],
         'Comparator': c,
-        'IntegerValues': int(hit_properties['QualificationInteger']),
+        'IntegerValues': [int(hit_properties['QualificationInteger'])],
         'RequiredToPreview': False,
     })
     del hit_properties['QualificationId']
