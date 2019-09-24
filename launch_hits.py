@@ -1,9 +1,5 @@
 import argparse, json
 
-from boto.mturk.price import Price
-from boto.mturk.question import HTMLQuestion
-from boto.mturk.connection import MTurkRequestError
-
 import os
 import simpleamt
 import sys
@@ -18,10 +14,10 @@ if __name__ == '__main__':
   mtc = simpleamt.get_mturk_connection_from_args(args)
 
   hit_properties = json.load(args.hit_properties_file)
-  hit_properties['reward'] = Price(hit_properties['reward'])
+  hit_properties['Reward'] = str(hit_properties['Reward'])
   simpleamt.setup_qualifications(hit_properties, mtc)
 
-  frame_height = hit_properties.pop('frame_height')
+  frame_height = hit_properties.pop('FrameHeight')
   env = simpleamt.get_jinja_env(args.config)
   template = env.get_template(args.html_template)
 
@@ -39,9 +35,19 @@ if __name__ == '__main__':
       # In a previous version I removed all single quotes from the json dump.
       # TODO: double check to see if this is still necessary.
       template_params = { 'input': json.dumps(hit_input) }
-      html = template.render(template_params)
-      html_question = HTMLQuestion(html, frame_height)
-      hit_properties['question'] = html_question
+      html_doc = template.render(template_params)
+      html_question = '''
+        <HTMLQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
+          <HTMLContent>
+            <![CDATA[
+              <!DOCTYPE html>
+              %s
+            ]]>
+          </HTMLContent>
+          <FrameHeight>%d</FrameHeight>
+        </HTMLQuestion>
+      ''' % (html_doc, frame_height)
+      hit_properties['Question'] = html_question
 
       # This error handling is kinda hacky.
       # TODO: Do something better here.
@@ -50,9 +56,9 @@ if __name__ == '__main__':
         try:
           boto_hit = mtc.create_hit(**hit_properties)
           launched = True
-        except MTurkRequestError as e:
+        except Exception as e:
           print(e)
-      hit_id = boto_hit[0].HITId
+      hit_id = boto_hit['HIT']['HITId']
       hit_ids_file.write('%s\n' % hit_id)
       print('Launched HIT ID: %s, %d' % (hit_id, i + 1))
 

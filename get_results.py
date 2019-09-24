@@ -3,35 +3,28 @@ import argparse, json
 import simpleamt
 import sys
 import os
+import re
 
 def process_assignments(mtc, hit_id, status):
   results = []
-  page_number = 1
-  while True:
-    try:
-      assignments = mtc.get_assignments(hit_id, page_number = page_number, page_size=100)
-      if len(assignments) == 0:
-        return results
-    except:
-      print >> sys.stderr, ('Bad hit_id %s' % str(hit_id))
-      return results
-    for a in assignments:
-      if a.AssignmentStatus in status:
-        try:
-          output = json.loads(a.answers[0][0].fields[0])
-        except ValueError as e:
-          print >> sys.stderr, ('Bad data from assignment %s (worker %s)'
-              % (a.AssignmentId, a.WorkerId))
-          mtc.reject_assignment(a.AssignmentId, feedback='Invalid results')
-          continue
-        results.append({
-          'assignment_id': a.AssignmentId,
-          'hit_id': hit_id,
-          'worker_id': a.WorkerId,
-          'output': json.loads(a.answers[0][0].fields[0]),
-          'submit_time': a.SubmitTime,
-        })
-    page_number += 1
+  paginator = mtc.get_paginator('list_assignments_for_hit')
+  try:
+    for a_page in paginator.paginate(HITId=hit_id, PaginationConfig={'PageSize': 100}):
+        for a in a_page['Assignments']:
+          if a['AssignmentStatus'] not in status:
+            continue
+          answer = json.loads(re.search(r'<FreeText>(?P<answer>.*?)</FreeText>', a['Answer'])['answer'])
+          results.append({
+           'assignment_id': a['AssignmentId'],
+            'hit_id': hit_id,
+            'worker_id': a['WorkerId'],
+            'output': answer,
+            'submit_time': str(a['SubmitTime']),
+          })
+  except mtc.exceptions.RequestError:
+    print('Bad hit_id %s' % str(hit_id), file=sys.stderr)
+    return results
+
   return results
 
 if __name__ == '__main__':

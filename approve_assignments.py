@@ -1,5 +1,6 @@
 import argparse, json
 import simpleamt
+import re
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(add_help=False)
@@ -22,12 +23,12 @@ if __name__ == '__main__':
     assignment_ids = [line.strip() for line in f]
 
   for a_id in assignment_ids:
-    a = mtc.get_assignment(a_id)[0]
-    if a.AssignmentStatus == 'Submitted':
+    a = mtc.get_assignment(AssignmentId=a_id)['Assignment']
+    if a['AssignmentStatus'] == 'Submitted':
       try:
         # Try to parse the output from the assignment. If it isn't
         # valid JSON then we reject the assignment.
-        output = json.loads(a.answers[0][0].fields[0])
+        json.loads(re.search(r'<FreeText>(?P<answer>.*?)</FreeText>', a['Answer'])['answer'])
         approve_ids.append(a_id)
       except ValueError as e:
         reject_ids.append(a_id)
@@ -44,9 +45,9 @@ if __name__ == '__main__':
     print('Approving assignments')
     for idx, assignment_id in enumerate(approve_ids):
       print('Approving assignment %d / %d' % (idx + 1, len(approve_ids)))
-      mtc.approve_assignment(assignment_id)
+      mtc.approve_assignment(AssignmentId=assignment_id)
     for idx, assignment_id in enumerate(reject_ids):
       print('Rejecting assignment %d / %d' % (idx + 1, len(reject_ids)))
-      mtc.reject_assignment(assignment_id, feedback='Invalid results')
+      mtc.reject_assignment(AssignmentId=assignment_id, RequesterFeedback='Invalid results')
   else:
     print('Aborting')

@@ -20,16 +20,17 @@ if __name__ == '__main__':
   for idx, hit_id in enumerate(hit_ids):
     print('Checking HIT %d / %d' % (idx + 1, len(hit_ids)))
     try:
-      hit = mtc.get_hit(hit_id)[0]
+      hit = mtc.get_hit(HITId=hit_id)['HIT']
     except:
-      print('Can\'t find hit id: %d' % (hit_id))
+      print('Can\'t find hit id: %s' % (hit_id))
       continue
-    total = int(hit.MaxAssignments)
+    total = int(hit['MaxAssignments'])
     completed = 0
-    for a in mtc.get_assignments(hit_id):
-      s = a.AssignmentStatus
-      if s == 'Submitted' or s == 'Approved' or s == 'Rejected':
-        completed += 1
+    paginator = mtc.get_paginator('list_assignments_for_hit')
+    for a_page in paginator.paginate(HITId=hit_id, PaginationConfig={'PageSize': 100}):
+        for a in a_page['Assignments']:
+            if a['AssignmentStatus'] in ['Submitted', 'Approved', 'Rejected']:
+                completed += 1
     counter.update([(completed, total)])
 
   for (completed, total), count in counter.most_common():

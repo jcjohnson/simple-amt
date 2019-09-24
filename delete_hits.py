@@ -30,9 +30,9 @@ if __name__ == '__main__':
   if s == 'Y' or s == 'y':
     for index, hit_id in enumerate(hit_ids):
       try:
-        mtc.disable_hit(hit_id)
+        mtc.delete_hit(HITId=hit_id)
         print('disabling: %d / %d' % (index+1, len(hit_ids)))
       except:
-        print('Failed to disable: %s' % (hit_id))
+        print('Failed to delete: %s' % (hit_id))
   else:
     print('Aborting')

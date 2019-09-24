@@ -27,7 +27,7 @@ if __name__ == '__main__':
     for idx, assignment_id in enumerate(assignment_ids):
       print('Rejecting assignment %d / %d' % (idx + 1, len(assignment_ids)))
       try:
-        mtc.reject_assignment(assignment_id, feedback='Invalid results')
+        mtc.reject_assignment(AssignmentId=assignment_id, RequesterFeedback='Invalid results')
       except:
         print("Could not reject: %s" % (assignment_id))
   else:

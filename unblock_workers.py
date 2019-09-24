@@ -19,7 +19,7 @@ if __name__ == '__main__':
   if s == 'Y' or s == 'y':
     for worker_id in worker_ids:
       try:
-        mtc.unblock_worker(worker_id, "provided bad data")
+        mtc.delete_worker_block(WorkerId=worker_id, Reason='provided bad data')
       except:
         print('Failed to block: %s' % (worker_id))
   else:

@@ -1,10 +1,11 @@
 {
-  "title": "Write sentences to describe images",
-  "description": "Write sentences to describe what you see in images.",
-  "keywords": "image,images,write,writing,sentence",
-  "reward": 0.05,
-  "duration": 900,
-  "frame_height": 20000,
-  "max_assignments": 1,
-  "country": ["US", "DE"]
+  "Title": "Write sentences to describe images",
+  "Description": "Write sentences to describe what you see in images.",
+  "Keywords": "image,images,write,writing,sentence",
+  "Reward": 0.05,
+  "LifetimeInSeconds": 604800,
+  "AssignmentDurationInSeconds": 900,
+  "FrameHeight": 20000,
+  "MaxAssignments": 1,
+  "Country": ["US", "DE"]
 }

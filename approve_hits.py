@@ -1,5 +1,6 @@
 import argparse, json
 import simpleamt
+import re
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(parents=[simpleamt.get_parent_parser()])
@@ -17,21 +18,22 @@ if __name__ == '__main__':
     hit_ids = [line.strip() for line in f]
 
   for hit_id in hit_ids:
+    paginator = mtc.get_paginator('list_assignments_for_hit')
     try:
-      assignments = mtc.get_assignments(hit_id)
-    except:
+      for a_page in paginator.paginate(HITId=hit_id, PaginationConfig={'PageSize': 100}):
+        for a in a_page['Assignments']:
+          if a['AssignmentStatus'] == 'Submitted':
+            try:
+              # Try to parse the output from the assignment. If it isn't
+              # valid JSON then we reject the assignment.
+              json.loads(re.search(r'<FreeText>(?P<answer>.*?)</FreeText>', a['Answer'])['answer'])
+              approve_ids.append(a['AssignmentId'])
+            except ValueError as e:
+              reject_ids.append(['AssignmentId'])
+          else:
+            print("hit %s has already been %s" % (str(hit_id), a['AssignmentStatus']))
+    except mtc.exceptions.RequestError:
       continue
-    for a in assignments:
-      if a.AssignmentStatus == 'Submitted':
-        try:
-          # Try to parse the output from the assignment. If it isn't
-          # valid JSON then we reject the assignment.
-          output = json.loads(a.answers[0][0].fields[0])
-          approve_ids.append(a.AssignmentId)
-        except ValueError as e:
-          reject_ids.append(a.AssignmentId)
-      else:
-        print("hit %s has already been %s" % (str(hit_id), a.AssignmentStatus))
 
   print('This will approve %d assignments and reject %d assignments with '
          'sandbox=%s' % (len(approve_ids), len(reject_ids), str(args.sandbox)))
@@ -45,9 +47,9 @@ if __name__ == '__main__':
     print('Approving assignments')
     for idx, assignment_id in enumerate(approve_ids):
       print('Approving assignment %d / %d' % (idx + 1, len(approve_ids)))
-      mtc.approve_assignment(assignment_id)
+      mtc.approve_assignment(AssignmentId=assignment_id)
     for idx, assignment_id in enumerate(reject_ids):
       print('Rejecting assignment %d / %d' % (idx + 1, len(reject_ids)))
-      mtc.reject_assignment(assignment_id, feedback='Invalid results')
+      mtc.reject_assignment(AssignmentId=assignment_id, RequesterFeedback='Invalid results')
   else:
     print('Aborting')

@@ -1,9 +1,9 @@
 {
-  "title": "Name an example of a category",
-  "description": "You must name an example of a type of category, such as a type of dog or an ice cream flavor.",
-  "keywords": "write,writing,category,example,examples",
-  "reward": 0.05,
-  "duration": 900,
-  "frame_height": 20000,
-  "max_assignments": 1
+  "Title": "Name an example of a category",
+  "Description": "You must name an example of a type of category, such as a type of dog or an ice cream flavor.",
+  "Keywords": "write,writing,category,example,examples",
+  "Reward": 0.05,
+  "AssignmentDurationInSeconds": 900,
+  "FrameHeight": 20000,
+  "MaxAssignments": 1
 }
