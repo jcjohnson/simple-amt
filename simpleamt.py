@@ -46,13 +46,20 @@ def get_mturk_connection_from_args(args):
                               aws_secret_key=aws_secret_key)
 
 
-def get_mturk_connection(sandbox=True, aws_access_key=None,
-                         aws_secret_key=None):
+def get_mturk_connection(sandbox=True,
+                         aws_access_key=None,
+                         aws_secret_key=None,
+                         region_name='us-east-1'):
   """
   Get a boto mturk connection. This is a thin wrapper over boto3.client; 
   the only difference is a boolean flag to indicate sandbox or not.
   """
   kwargs = {}
+  # boto3 client requires a region to make a connection. if you
+  # have a default region in your ~/.aws/config other than us-east-1,
+  # it throws an error. Since Mturk endpoint is by default only in
+  # us-east-1, there is no point of asking users to provide it. See #29
+  kwargs['region_name'] = region_name
   if aws_access_key is not None:
     kwargs['aws_access_key_id'] = aws_access_key
   if aws_secret_key is not None:
